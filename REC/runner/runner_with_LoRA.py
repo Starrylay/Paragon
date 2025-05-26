@@ -15,7 +15,7 @@ from functools import reduce
 
 class BaseRunner(object):
     @staticmethod
-    def evaluate_method(output_dict: dict, topk: list, metrics: list, id_multihot: dict) -> Dict[str, float]:
+    def evaluate_method(output_dict: dict, topk: list, metrics: list, id_multihot: dict, users_gender:dict) -> Dict[str, float]:
         predictions: np.ndarray = output_dict["predictions"]
         evaluations = dict()
         gt_rank = (predictions >= predictions[:,0].reshape(-1,1)).sum(axis=-1)
@@ -30,6 +30,8 @@ class BaseRunner(object):
                 elif metric == 'ALPHA_NDCG':
                     scores = BaseRunner.best_alpha_nDCG(output_dict, id_multihot, 0.5, k)
                     evaluations[key] = BaseRunner.alpha_ndcg(output_dict, id_multihot, 0.5,k, normaliztion = scores)
+                elif metric == 'NDCG_GAP':
+                    evaluations[key] = BaseRunner.calculate_fairness_ndcg(output_dict, users_gender, k)
                 else:
                     raise ValueError('Undefined evaluation metric: {}.'.format(metric))
         return evaluations
@@ -275,8 +277,8 @@ class BaseRunner(object):
 
             accuracy_loss = model.loss(out_dict)
             diversity_loss = model.diversity_loss(out_dict)
-
-            loss = self.accuracy_weight * accuracy_loss + self.diversity_weight * diversity_loss
+            fairness_loss = model.fairness_loss(out_dict,batch['user_id'])
+            loss = float(self.accuracy_weight) * accuracy_loss + float(self.diversity_weight) * diversity_loss + float(self.fairness_weight) * fairness_loss
 
             loss.backward()
             model.optimizer.step()

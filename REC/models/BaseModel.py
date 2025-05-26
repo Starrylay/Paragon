@@ -203,6 +203,40 @@ class GeneralModel(BaseModel):
 		# ↑ For numerical stability, use 'softplus(-x)' instead of '-log_sigmoid(x)'
 		return loss
 	
+	def fairness_loss(self, out_dict: dict, batch_user) -> torch.Tensor:
+		"""
+		Compute the fairness-aware regularization term based on the difference in average loss
+		between male and female groups, as shown in the provided fairness objective.
+		:param out_dict: Dictionary containing predictions and gender labels.
+		:return: Total loss with fairness regularization.
+		"""
+		# Extract losses for the batch
+		uids = batch_user.cpu().numpy().tolist()
+		if self.dataset_name == 'MovieLens_1M':
+			genders = [self.uid2gender[str(uid)] for uid in uids]# Assuming gender is a tensor where 0 = male and 1 = female
+		predictions = out_dict['prediction']
+		pos_pred, neg_pred = predictions[:, 0], predictions[:, 1:]
+		neg_softmax = (neg_pred - neg_pred.max()).softmax(dim=1)
+		batch_loss = -(((pos_pred[:, None] - neg_pred).sigmoid() * neg_softmax).sum(dim=1)).clamp(min=1e-8, max=1-1e-8).log()
+		genders = genders = torch.tensor(genders, device=batch_loss.device) 
+		# Separate losses by gender groups
+		male_losses = batch_loss[genders == 0]
+		female_losses = batch_loss[genders == 1]
+		# Calculate mean losses for each group
+		male_loss_mean = male_losses.mean() if len(male_losses) > 0 else torch.tensor(0.0, device=batch_loss.device)
+		female_loss_mean = female_losses.mean() if len(female_losses) > 0 else torch.tensor(0.0, device=batch_loss.device)
+		# Calculate fairness regularization term
+		
+		if self.is_fair == 0:
+			fairness_reg = 0.1 * max(male_loss_mean, female_loss_mean) + 0.9 * min(female_loss_mean, male_loss_mean)
+		else:
+			fairness_reg = 0.9 * max(male_loss_mean, female_loss_mean) + 0.1 * min(female_loss_mean, male_loss_mean)
+		# # Set lambda for the fairness regularization term
+		# lambda_fairness = 0.1  # You can adjust this value as needed
+		# # Compute the total loss with fairness term
+		# total_loss = batch_loss.mean() + lambda_fairness * fairness_reg
+		return fairness_reg
+	
 	def diversity_loss(self, out_dict: dict) -> torch.Tensor:
 		start_time = time()
 		predictions = out_dict['prediction']  # [B, N] preds 
