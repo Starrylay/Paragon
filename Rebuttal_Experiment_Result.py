@@ -17,9 +17,9 @@
     fairness(↓):[0.0002, 0.0006, 0.0002, 0.0083, 0.0116, 0.0147, 0.0165, 0.0143, 0.0163, 0.0182]
 
 When using a consistent backbone, there are still slight differences between the settings in Figure 6b and Figure 4a. This is because the analysis experiment introduces a fairness regularization term on top of the main experimental loss function, which alters the original form of the accuracy loss and thus introduces minor perturbations to accuracy. Specifically, we split the accuracy loss into two groups based on male and female users and increase the gap between their accuracy losses to reflect unfairness. The implementation can be found in models/BaseModel.py.
-if self.is_fair == 0: # fair setting
+if self.is_fair == 0: # unfair setting
     fairness_reg = 0.1 * max(male_acc_loss_mean, female_acc_loss_mean) + 0.9 * min(female_acc_loss_mean, male_acc_loss_mean)
-else: # unfair setting
+else: # fair setting
     fairness_reg = 0.9 * max(male_acc_loss_mean, female_acc_loss_mean) + 0.1 * min(female_acc_loss_mean, male_acc_loss_mean)
 
 The conclusion is consistent with Figure 6: under fairness control, the fairness in the fair setting outperforms that in the unfair setting, while the differences in accuracy and diversity remain minimal.

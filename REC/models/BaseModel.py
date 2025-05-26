@@ -171,8 +171,8 @@ class GeneralModel(BaseModel):
 			self.item_multihot_mapping = json.load(open(f'corpus/{args.dataset}/{args.dataset}/newid2multihot.json', 'r'))
 		elif args.dataset == 'MIND_Large':
 			self.item_multihot_mapping = json.load(open(f'corpus/{args.dataset}/MINDTOPK/newid2multihot.json', 'r'))
-		elif args.dataset == 'Lenovo3C':
-			self.item_multihot_mapping = json.load(open(f'corpus/{args.dataset}/Lenovo3C_TOPK/newid2multihot.json', 'r'))
+		elif args.dataset == 'xxx':
+			self.item_multihot_mapping = json.load(open(f'corpus/{args.dataset}/xxx_TOPK/newid2multihot.json', 'r'))
 		else:
 			logging.error('No such multihot embedding of dataset: {}'.format(args.dataset))
 			
@@ -226,7 +226,6 @@ class GeneralModel(BaseModel):
 		male_loss_mean = male_losses.mean() if len(male_losses) > 0 else torch.tensor(0.0, device=batch_loss.device)
 		female_loss_mean = female_losses.mean() if len(female_losses) > 0 else torch.tensor(0.0, device=batch_loss.device)
 		# Calculate fairness regularization term
-		
 		if self.is_fair == 0:
 			fairness_reg = 0.1 * max(male_loss_mean, female_loss_mean) + 0.9 * min(female_loss_mean, male_loss_mean)
 		else:
