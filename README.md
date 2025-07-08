@@ -1,5 +1,6 @@
 # Paragon
 
+[main_recsys (1).pdf](https://github.com/user-attachments/files/21119564/main_recsys.1.pdf)
 
 Paragon is an innovative project that combines recommendation systems with diffusion models.
 
