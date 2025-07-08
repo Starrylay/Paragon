@@ -1,6 +1,7 @@
 # Paragon
 
-[main_recsys (1).pdf](https://github.com/user-attachments/files/21119564/main_recsys.1.pdf)
+![image](https://github.com/ZhiliangMa/MPU6500-HMC5983-AK8975-BMP280-MS5611-10DOF-IMU-PCB/blob/main/img/IMU-V5-TOP.jpg)
+
 
 Paragon is an innovative project that combines recommendation systems with diffusion models.
 
