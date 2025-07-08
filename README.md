@@ -1,5 +1,7 @@
 # Paragon
 
+![image](https://github.com/Starrylay/Paragon/blob/main/images/main_paragon.png)
+
 Paragon is an innovative project that combines recommendation systems with diffusion models.
 
 ## Project Structure
