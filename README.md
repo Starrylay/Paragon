@@ -1,4 +1,5 @@
 # Paragon
+![Uploading image.png…]()
 
 Paragon is an innovative project that combines recommendation systems with diffusion models.
 
