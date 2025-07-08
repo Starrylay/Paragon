@@ -4,6 +4,11 @@
 
 Paragon is an innovative project that combines recommendation systems with diffusion models.
 
+
+# News
+
+Accepted by Recsys 2025！
+
 ## Project Structure
 
 The project is organized into two main components:
