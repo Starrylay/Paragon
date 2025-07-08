@@ -60,6 +60,16 @@ To train the diffusion model and generate parameters for the recommendation mode
 cd DIFFUSION
 python main.py
 ```
+## Citation
+
+```bibtex
+@article{shen2024generating,
+title={Generating Model Parameters for Controlling: Parameter Diffusion for Controllable Multi-Task Recommendation},
+author={Shen, Chenglei and Zhao, Jiahao and Zhang, Xiao and Yu, Weijie and He, Ming and Fan, Jianping},
+journal={arXiv preprint arXiv:2410.10639},
+year={2024}
+}
+```
 
 ## Contributing
 
